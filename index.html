@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine? 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            font-family: 'Comic Sans MS', 'Chalkboard', cursive;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #d63384;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .question-img {
+            max-width: 300px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            transition: transform 0.3s;
+        }
+
+        .begging-text {
+            font-size: 1.5rem;
+            color: #d63384;
+            margin-bottom: 20px;
+            min-height: 40px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            position: relative;
+            min-height: 100px;
+        }
+
+        .btn {
+            padding: 15px 50px;
+            font-size: 1.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-yes {
+            background: linear-gradient(45deg, #00c853, #69f0ae);
+            color: white;
+            z-index: 100;
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0,200,83,0.4);
+        }
+
+        .btn-no {
+            background: linear-gradient(45deg, #ff5252, #ff8a80);
+            color: white;
+            position: fixed;
+            transition: left 0.3s ease-out, top 0.3s ease-out;
+            left: 50%;
+            top: 50%;
+        }
+
+        .btn-no:hover {
+            box-shadow: 0 8px 25px rgba(255,82,82,0.4);
+        }
+
+        .hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 30px;
+            animation: fall linear infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Celebration mode */
+        .celebration {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .celebration.active {
+            display: flex;
+        }
+
+        .celebration h1 {
+            font-size: 3.5rem;
+            color: #d63384;
+            margin-bottom: 20px;
+        }
+
+        .gif-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            max-width: 900px;
+            margin-top: 20px;
+        }
+
+        .gif-gallery img {
+            width: 250px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            animation: bounceIn 0.5s ease forwards;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .gif-gallery img:nth-child(1) { animation-delay: 0.1s; }
+        .gif-gallery img:nth-child(2) { animation-delay: 0.2s; }
+        .gif-gallery img:nth-child(3) { animation-delay: 0.3s; }
+        .gif-gallery img:nth-child(4) { animation-delay: 0.4s; }
+        .gif-gallery img:nth-child(5) { animation-delay: 0.5s; }
+
+        /* Explosion mode */
+        .explosion-mode {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: black;
+        }
+
+        .explosion-mode.active {
+            display: flex;
+        }
+
+        .explosion-mode img {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+        }
+
+        .explosion-mode .mega-yes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            font-size: 5rem;
+            background: linear-gradient(45deg, #00c853, #69f0ae);
+            color: white;
+            border: none;
+            border-radius: 0;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            animation: megaPulse 0.5s ease-in-out infinite;
+            display: none;
+        }
+
+        .explosion-mode .mega-yes.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes megaPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 50px #00c853; }
+            50% { transform: scale(1.02); box-shadow: 0 0 100px #69f0ae; }
+        }
+
+        .chud-counter {
+            font-size: 1.2rem;
+            color: #ff5252;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        /* Confetti effect */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            top: -10px;
+            animation: confettiFall linear forwards;
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating hearts background -->
+    <div class="hearts" id="hearts"></div>
+
+    <!-- Main question container -->
+    <div class="container" id="mainContainer">
+        <h1>Will You Be My Valentine? 💕</h1>
+        <img src="kamisama_kiss.gif" alt="Please?" class="question-img" id="questionImg">
+        <p class="begging-text" id="beggingText"></p>
+        <div class="buttons" id="buttonsContainer">
+            <button class="btn btn-yes" id="yesBtn" onclick="sayYes()">Yes! 💖</button>
+            <button class="btn btn-no" id="noBtn">No 💔</button>
+        </div>
+    </div>
+
+    <!-- Celebration container -->
+    <div class="celebration" id="celebration">
+        <h1>THANK YOU GOAT 🐐💕🎉💖</h1>
+        <p style="font-size: 1.5rem; color: #d63384; margin-bottom: 10px;">YOU'RE SO LITTY!</p>
+        <img src="drake-w-in-the-chat.gif" alt="W!" style="width: 200px; border-radius: 15px; margin: 20px;">
+        <div class="gif-gallery">
+            <img src="fruit_basket.gif" alt="Celebration 1">
+            <img src="kamisama_kiss.gif" alt="Celebration 2">
+            <img src="snow_white_with_red_hair.gif" alt="Celebration 3">
+        </div>
+    </div>
+
+    <!-- Explosion mode -->
+    <div class="explosion-mode" id="explosionMode">
+        <img src="explosions.gif" alt="BOOM!" id="explosionGif">
+        <button class="mega-yes" id="megaYesBtn" onclick="sayYes()">Yes 💖</button>
+    </div>
+
+    <script>
+        let noClickCount = 0;
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const questionImg = document.getElementById('questionImg');
+        const beggingText = document.getElementById('beggingText');
+        const chudCounter = document.getElementById('chudCounter');
+        const buttonsContainer = document.getElementById('buttonsContainer');
+
+        const beggingImages = [
+            'what the hell.jpg',
+            'begging1.jpg',
+            'begging2.webp',
+            'begging3.jpg',
+            'begging4.jpg'
+        ];
+
+        // Audio elements
+        const sadHamsterAudio = new Audio('sad_hamster_meme_theme.mp3');
+        const explosionAudio = new Audio('dragon-studio-explosion-sound-effect-425455.mp3');
+        const celebrationMusic = new Audio('CA7RIEL_Paco_Amoroso_TINI_-_AGUA_(mp3.pm).mp3');
+        celebrationMusic.loop = true;
+
+        const beggingMessages = [
+            "Are you sure? 🥺",
+            "Please... 😢",
+            "Click yes or else 💔",
+            "8 min planking vid to failure w/ audio ",
+            "Click no again if you're a chud 🙏",
+            "Fuck YOUR chud life! 💥"
+        ];
+
+        // Button position tracking
+        let noBtnX = window.innerWidth / 2 + 100;
+        let noBtnY = window.innerHeight / 2 + 50;
+        const fleeDistance = 120; // How close mouse needs to be to trigger flee
+        const fleeSpeed = 25; // How far to move when fleeing (slower so it's clickable)
+        
+        // Initialize button position
+        noBtn.style.left = noBtnX + 'px';
+        noBtn.style.top = noBtnY + 'px';
+
+        // Track mouse position and make button flee smoothly
+        document.addEventListener('mousemove', function(e) {
+            if (noClickCount > 5) return; // Don't flee in explosion mode
+            
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            
+            // Get button center position
+            const btnRect = noBtn.getBoundingClientRect();
+            const btnCenterX = btnRect.left + btnRect.width / 2;
+            const btnCenterY = btnRect.top + btnRect.height / 2;
+            
+            // Calculate distance from mouse to button center
+            const dx = btnCenterX - mouseX;
+            const dy = btnCenterY - mouseY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            // If mouse is close enough, make button flee
+            if (distance < fleeDistance) {
+                // Calculate flee direction (away from mouse)
+                const angle = Math.atan2(dy, dx);
+                
+                // Calculate how much to flee based on proximity (closer = faster flee)
+                const fleeFactor = (fleeDistance - distance) / fleeDistance;
+                const moveX = Math.cos(angle) * fleeSpeed * fleeFactor;
+                const moveY = Math.sin(angle) * fleeSpeed * fleeFactor;
+                
+                // Update position
+                noBtnX += moveX;
+                noBtnY += moveY;
+                
+                // Keep within screen bounds with padding
+                const padding = 20;
+                const maxX = window.innerWidth - btnRect.width - padding;
+                const maxY = window.innerHeight - btnRect.height - padding;
+                
+                noBtnX = Math.max(padding, Math.min(maxX, noBtnX));
+                noBtnY = Math.max(padding, Math.min(maxY, noBtnY));
+                
+                // Apply new position
+                noBtn.style.left = noBtnX + 'px';
+                noBtn.style.top = noBtnY + 'px';
+            }
+        });
+
+        // Handle touch for mobile - move away from touch point
+        noBtn.addEventListener('touchstart', function(e) {
+            if (noClickCount <= 5) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const btnRect = noBtn.getBoundingClientRect();
+                const btnCenterX = btnRect.left + btnRect.width / 2;
+                const btnCenterY = btnRect.top + btnRect.height / 2;
+                
+                const dx = btnCenterX - touch.clientX;
+                const dy = btnCenterY - touch.clientY;
+                const angle = Math.atan2(dy, dx);
+                
+                noBtnX += Math.cos(angle) * fleeSpeed;
+                noBtnY += Math.sin(angle) * fleeSpeed;
+                
+                const padding = 20;
+                const maxX = window.innerWidth - btnRect.width - padding;
+                const maxY = window.innerHeight - btnRect.height - padding;
+                
+                noBtnX = Math.max(padding, Math.min(maxX, noBtnX));
+                noBtnY = Math.max(padding, Math.min(maxY, noBtnY));
+                
+                noBtn.style.left = noBtnX + 'px';
+                noBtn.style.top = noBtnY + 'px';
+            }
+        });
+
+        // Handle NO button click
+        noBtn.addEventListener('click', function() {
+            noClickCount++;
+            
+            // Play sad hamster audio
+            sadHamsterAudio.currentTime = 0;
+            sadHamsterAudio.play();
+            
+            if (noClickCount > 5) {
+                // EXPLOSION MODE!
+                document.getElementById('mainContainer').classList.add('hidden');
+                document.getElementById('explosionMode').classList.add('active');
+                
+                // Stop sad hamster and play explosion sound
+                sadHamsterAudio.pause();
+                explosionAudio.currentTime = 0;
+                explosionAudio.play();
+                
+                // After 3 seconds, hide explosion and show mega yes button
+                setTimeout(function() {
+                    document.getElementById('explosionGif').style.display = 'none';
+                    document.getElementById('megaYesBtn').classList.add('active');
+                }, 3000);
+            } else {
+                // Show begging images and messages
+                const imgIndex = (noClickCount - 1) % beggingImages.length;
+                questionImg.src = beggingImages[imgIndex];
+                beggingText.textContent = beggingMessages[Math.min(noClickCount - 1, beggingMessages.length - 1)];
+                
+                // Make yes button grow
+                const scale = 1 + (noClickCount * 0.2);
+                yesBtn.style.transform = `scale(${scale})`;
+            }
+        });
+
+        // Handle YES button click
+        function sayYes() {
+            document.getElementById('mainContainer').classList.add('hidden');
+            document.getElementById('explosionMode').classList.remove('active');
+            document.getElementById('celebration').classList.add('active');
+            
+            // Stop any playing audio and play celebration music
+            sadHamsterAudio.pause();
+            explosionAudio.pause();
+            celebrationMusic.currentTime = 0;
+            celebrationMusic.play();
+            
+            // Spawn confetti!
+            for (let i = 0; i < 100; i++) {
+                createConfetti();
+            }
+            
+            // Create more hearts
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => createHeart(), i * 100);
+            }
+        }
+
+        // Create falling hearts
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = ['💕', '💖', '💗', '💓', '❤️', '💘'][Math.floor(Math.random() * 6)];
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+            document.getElementById('hearts').appendChild(heart);
+            
+            setTimeout(() => heart.remove(), 5000);
+        }
+
+        // Create confetti
+        function createConfetti() {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.backgroundColor = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#95e1d3', '#f38181', '#aa96da'][Math.floor(Math.random() * 6)];
+            confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            confetti.style.width = (Math.random() * 10 + 5) + 'px';
+            confetti.style.height = (Math.random() * 10 + 5) + 'px';
+            confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+            document.body.appendChild(confetti);
+            
+            setTimeout(() => confetti.remove(), 4000);
+        }
+
+        // Initial floating hearts
+        for (let i = 0; i < 20; i++) {
+            setTimeout(() => createHeart(), i * 300);
+        }
+    </script>
+</body>
+</html>
